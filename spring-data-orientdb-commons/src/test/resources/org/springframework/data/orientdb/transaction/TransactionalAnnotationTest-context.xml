@@ -15,22 +15,16 @@
 	
 	<context:component-scan base-package="org.springframework.data.orientdb.transaction" />
 	
-	<bean id="orientDbManager" class="org.springframework.data.orientdb.mock.OrientDbManagerMock">
-		<constructor-arg name="dbURI" value="memory:testDB"/>
-		<constructor-arg name="credentials" >
-			<bean class="org.springframework.data.authentication.UserCredentials">
-				<constructor-arg name="username" value="admin"/>
-				<constructor-arg name="password" value="admin"/>
-			</bean>
-		</constructor-arg>
+	<bean id="orientDbFactory" class="org.springframework.data.orientdb.mock.OrientDocumentDatabaseFactoryMock">
+		<constructor-arg name="uri" value="memory:testDB"/>
+		<constructor-arg name="user" value="admin"/>
+		<constructor-arg name="password" value="admin"/>
 	</bean>
 	
 	<bean id="orientTransactionManager" class="org.springframework.data.orientdb.transaction.OrientTransactionManager">
-		<constructor-arg name="dbManager" ref="orientDbManager"/>
+		<property name="factory" ref="orientDbFactory"/>
 	</bean>
 
-	<bean id="txMethodsContainer" class="org.springframework.data.orientdb.transaction.TransactionalMethodsContainer">
-	</bean>
-
+	<bean id="txMethodsContainer" class="org.springframework.data.orientdb.transaction.TransactionalMethodsContainer"/>
 	
 </beans>

@@ -25,28 +25,28 @@ import org.springframework.data.authentication.UserCredentials;
  * 
  */
 
-public class OConnectionException extends DataAccessResourceFailureException {
+public class CannotGetOriendDbConnectionException extends DataAccessResourceFailureException {
 
 	private static final long serialVersionUID = -194909274330227547L;
 	
 	private UserCredentials credentials = UserCredentials.NO_CREDENTIALS;
 	private String dbURI = null;
 	
-	public OConnectionException(String msg) {
+	public CannotGetOriendDbConnectionException(String msg) {
 		super(msg);
 	}
 	
-	public OConnectionException(String msg, Throwable t) {
+	public CannotGetOriendDbConnectionException(String msg, Throwable t) {
 		super(msg, t);
 	}
 	
-	public OConnectionException(String msg, String dbURI, UserCredentials credentials) {
+	public CannotGetOriendDbConnectionException(String msg, String dbURI, UserCredentials credentials) {
 		super(msg);
 		this.dbURI = dbURI;
 		this.credentials = credentials;
 	}
 	
-	public OConnectionException(String msg, Throwable t, String dbURI, UserCredentials credentials) {
+	public CannotGetOriendDbConnectionException(String msg, Throwable t, String dbURI, UserCredentials credentials) {
 		super(msg, t);
 		this.dbURI = dbURI;
 		this.credentials = credentials;

@@ -4,37 +4,33 @@ import org.springframework.transaction.support.ResourceHolderSupport;
 
 import com.orientechnologies.orient.core.db.record.ODatabaseRecord;
 
-public class ODatabaseHolder extends ResourceHolderSupport  {
+public class ODatabaseHolder<DB extends ODatabaseRecord> extends ResourceHolderSupport  {
 
-	private boolean transactionActive;
+	private DB database;
 	
-	private ODatabaseRecord databaseObject;
+	private boolean transactionActive = false;
 	
-	public ODatabaseHolder(ODatabaseRecord databaseObject) {
-		this.databaseObject = databaseObject;
-		this.transactionActive = false;
+	public ODatabaseHolder(DB database) {
+		this.database = database;
 	}
 	
-	public ODatabaseRecord getDatabaseObject() {
-		return databaseObject;
+	public DB getDatabase() {
+		return database;
 	}
 
-//	public void setDatabaseObject(ODatabaseRecord databaseObject) {
-//		this.databaseObject = databaseObject;
-//	}
-
-	public void setTransactionActive(boolean isTransactionActive) {
-		this.transactionActive = isTransactionActive;
+	public boolean isTransactionActive() {
+		return transactionActive;
 	}
-
-	public boolean isTransactionActive () {
-		return this.transactionActive;
+	
+	public void setTransactionActive(boolean transactionActive) {
+		this.transactionActive = transactionActive;
 	}
 	
 	@Override
 	public void clear() {
 		super.clear();
-		this.transactionActive = false;
+		database = null;
+		transactionActive = false;
 	}
 	
 }

@@ -7,14 +7,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.orientdb.core.OrientDbManager;
+import org.springframework.data.orientdb.core.OrientDatabaseUtils;
+import org.springframework.data.orientdb.mock.OrientDocumentDatabaseFactoryMock;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
-import com.orientechnologies.orient.core.record.impl.ODocument;
 
 
 /**
@@ -30,28 +28,21 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 public class TransactionalAnnotationTest {
 	
 	@Autowired
-	private OrientDbManager dbManager;
-	
-	private ODatabaseDocumentTx db;
+	private OrientDocumentDatabaseFactoryMock factory;
 	
 	@Autowired
 	private TransactionalMethodsContainer txMethodsContainer;
 	
+	private ODatabaseDocumentTx db;
+	
 	@Before
 	public void setUp() {
-		db = new ODatabaseDocumentTx("memory:testDB");
-		if(db.exists()) {
-	    	db.open("admin", "admin");
-	    	db.drop();
-	    }
-	    db.create(); 
-		db = (ODatabaseDocumentTx) dbManager.getCurrentDatabase();
-		txMethodsContainer.setDb(db);
+		db = OrientDatabaseUtils.getDatabase(factory);
 	}
 	
 	@After
 	public void tearDown() {
-		db = (ODatabaseDocumentTx) dbManager.getCurrentDatabase();
+		db = OrientDatabaseUtils.getDatabase(factory);
 		if(db.exists()) {
 	    	db.drop();
 	    }
@@ -66,8 +57,7 @@ public class TransactionalAnnotationTest {
 		assertTrue(!db.getTransaction().isActive());
 		assertTrue(db.isClosed());
 		
-		db = (ODatabaseDocumentTx) dbManager.getCurrentDatabase();
-		
+		db = OrientDatabaseUtils.getDatabase(factory);
 		assertTrue(db.countClass("testcommit") == 1);
 	}
 	
@@ -84,7 +74,7 @@ public class TransactionalAnnotationTest {
 		assertTrue(!db.getTransaction().isActive());
 		assertTrue(db.isClosed());
 		
-		db = (ODatabaseDocumentTx) dbManager.getCurrentDatabase();
+		db = OrientDatabaseUtils.getDatabase(factory);
 		
 		assertTrue(db.countClass("testrollback") == 0);
 	}
